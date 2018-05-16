@@ -2,8 +2,11 @@ package groep_2.app4school;
 
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import groep_2.app4school.model.todoItem;
 import groep_2.app4school.sample.SampleDataProvider;
 
 public class MainActivity extends AppCompatActivity {
+    private DrawerLayout drawer;
     TextView tvOut;
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
     List<String> todoTitles = new ArrayList<>();
@@ -36,20 +40,16 @@ public class MainActivity extends AppCompatActivity {
         mDataSource.insertDatabase(todoItemList);
         Toast.makeText(this, "Database acquired", Toast.LENGTH_SHORT).show();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-//        Collections.sort(todoItemList, new Comparator<todoItem>() {
-//            @Override
-//            public int compare(todoItem o1, todoItem o2) {
-//                return o1.getTodoTitle().compareTo(o2.getTodoTitle());
-//            }
-//        });
-//        for (todoItem item : todoItemList){
-//            tvOut.append(item.getTodoTitle() + "\n");
-//            todoTitles.add(item.getTodoTitle());
-//        }
-//        Collections.sort(todoTitles);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                this, android.R.layout.simple_list_item_1, todoTitles);
+        drawer = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
 
         List<todoItem> ListFromDB = mDataSource.getAllItems();
 
@@ -71,3 +71,4 @@ public class MainActivity extends AppCompatActivity {
         mDataSource.open();
     }
 }
+

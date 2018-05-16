@@ -1,3 +1,4 @@
+
 package groep_2.app4school.database;
 
 public class todoTable {
