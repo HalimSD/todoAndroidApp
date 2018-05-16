@@ -4,6 +4,7 @@ package groep_2.app4school;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import groep_2.app4school.model.todoItem;
 @SuppressWarnings("FieldCanBeLocal")
 public class DetailActivity extends AppCompatActivity {
 
-    private TextView tvName, tvDescription;
+    private TextView tvName, tvDescription, tvDuo, tvStatus, tvPriority;
     private ImageView itemImage;
 
     @Override
@@ -31,7 +32,9 @@ public class DetailActivity extends AppCompatActivity {
         tvName = (TextView) findViewById(R.id.tvItemName);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
         itemImage = (ImageView) findViewById(R.id.itemImage);
-
+        tvDuo = (TextView) findViewById(R.id.tvDuo);
+        tvStatus = (TextView) findViewById(R.id.tvStatus);
+        tvPriority = (TextView) findViewById(R.id.tvPriority);
         tvName.setText(item.getTodoTitle());
         tvDescription.setText(item.getTodoDescription());
 

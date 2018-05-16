@@ -35,7 +35,7 @@ public class DataItemAdapterListView extends ArrayAdapter<todoItem> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item, parent, false);
+            convertView = mInflater.inflate(R.layout.list_item, parent, true);
         }
 
         TextView tvName = convertView.findViewById(R.id.itemNameText);
