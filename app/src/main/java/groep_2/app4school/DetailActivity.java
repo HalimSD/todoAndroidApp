@@ -57,26 +57,3 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 }
-
-//public class DetailActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_detail);
-//
-////        String todoId = getIntent().getExtras().getString(DataItemAdapter.TODO_ID_KEY);
-//////        todoItem item = SampleDataProvider.dataItemMap.get(todoId);
-//
-//        todoItem item = getIntent().getExtras().getParcelable(DataItemAdapter.TODO_KEY);
-//
-//        if (item != null) {
-//            Toast.makeText(this, "Received item " + item.getTodoTitle(),
-//                    Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, "Didn't receive any data " ,
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-//}
