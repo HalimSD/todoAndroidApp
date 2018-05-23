@@ -13,13 +13,13 @@ public class todoItem implements Parcelable {
     private String todoId;
     private String todoTitle;
     private String todoDescription;
+    private String todoPriorityIMG;
     private String todoPriority;
+    private String todoDuoTo;
+    private String todoDone;
 
-    public todoItem() {
 
-    }
-
-    public todoItem(String todoId, String todoTitle, String todoDescription, String todoPriority) {
+    public todoItem(String todoId, String todoTitle, String todoDescription, String todoPriorityIMG, String todoPriority, String todoDuoTo, String todoDone) {
 
         if (todoId == null) {
             todoId = UUID.randomUUID().toString();
@@ -27,7 +27,10 @@ public class todoItem implements Parcelable {
         this.todoId = todoId;
         this.todoTitle = todoTitle;
         this.todoDescription = todoDescription;
+        this.todoPriorityIMG = todoPriorityIMG;
         this.todoPriority = todoPriority;
+        this.todoDuoTo = todoDuoTo;
+        this.todoDone = todoDone;
     }
 
     public String getTodoId() {
@@ -50,9 +53,7 @@ public class todoItem implements Parcelable {
         return todoDescription;
     }
 
-    public void setTodoDescription(String todoDescription) {
-        this.todoDescription = todoDescription;
-    }
+    public void setTodoDescription(String todoDescription) { this.todoDescription = todoDescription; }
 
     public String getTodoPriority() {
         return todoPriority;
@@ -62,12 +63,29 @@ public class todoItem implements Parcelable {
         this.todoPriority = todoPriority;
     }
 
+    public String getTodoPriorityIMG() { return todoPriorityIMG; }
+
+    public void setTodoPriorityIMG(String todoPriorityIMG) { this.todoPriorityIMG = todoPriorityIMG; }
+
+    public String getTodoDuoTo() { return todoDuoTo; }
+
+    public void setTodoDuoTo(String todoDuoTo) { this.todoDuoTo = todoDuoTo; }
+
+    public String getTodoDone() { return todoDone; }
+
+    public void setTodoDone(String todoDone) { this.todoDone = todoDone; }
+
+
     public ContentValues toValues(){
-        ContentValues values = new ContentValues(4);
+        ContentValues values = new ContentValues(7);
         values.put(todoTable.COLUMN_ID, todoId);
         values.put(todoTable.COLUMN_NAME, todoTitle);
         values.put(todoTable.COLUMN_DESCRIPTION, todoDescription);
+        values.put(todoTable.COLUMN_PRIORITYIMG, todoPriorityIMG);
         values.put(todoTable.COLUMN_PRIORITY, todoPriority);
+        values.put(todoTable.COLUMN_DUOTO, todoDuoTo);
+        values.put(todoTable.COLUMN_DONE, todoDone);
+
         return values;
     }
 
@@ -77,7 +95,10 @@ public class todoItem implements Parcelable {
                 "todoId='" + todoId + '\'' +
                 ", todoTitle='" + todoTitle + '\'' +
                 ", todoDescription='" + todoDescription + '\'' +
+                ", todoPriorityIMG='" + todoPriorityIMG + '\'' +
                 ", todoPriority='" + todoPriority + '\'' +
+                ", todoDuoTo='" + todoDuoTo + '\'' +
+                ", todoDone='" + todoDone + '\'' +
                 '}';
     }
 
@@ -91,14 +112,20 @@ public class todoItem implements Parcelable {
         dest.writeString(this.todoId);
         dest.writeString(this.todoTitle);
         dest.writeString(this.todoDescription);
+        dest.writeString(this.todoPriorityIMG);
         dest.writeString(this.todoPriority);
+        dest.writeString(this.todoDuoTo);
+        dest.writeString(this.todoDone);
     }
 
     protected todoItem(Parcel in) {
         this.todoId = in.readString();
         this.todoTitle = in.readString();
         this.todoDescription = in.readString();
+        this.todoPriorityIMG = in.readString();
         this.todoPriority = in.readString();
+        this.todoDuoTo = in.readString();
+        this.todoDone = in.readString();
     }
 
     public static final Parcelable.Creator<todoItem> CREATOR = new Parcelable.Creator<todoItem>() {
@@ -112,4 +139,6 @@ public class todoItem implements Parcelable {
             return new todoItem[size];
         }
     };
+
+
 }

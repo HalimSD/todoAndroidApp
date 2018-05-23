@@ -1,6 +1,5 @@
 package groep_2.app4school.database;
 
-import android.app.LauncherActivity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +70,14 @@ public class DataSource {
                 null, null, null, null, null);
 
         while (cursor.moveToNext()){
-            todoItem item = new todoItem();
+            todoItem item = new todoItem(null, "dfvf", "bvrbv", "done.png", "rtbrb", "rttb", "rtrt");
             item.setTodoId(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_ID)));
             item.setTodoTitle(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_NAME)));
             item.setTodoDescription(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_DESCRIPTION)));
+            item.setTodoPriorityIMG(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_PRIORITYIMG)));
             item.setTodoPriority(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_PRIORITY)));
+            item.setTodoDuoTo(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_DUOTO)));
+            item.setTodoDone(cursor.getString(cursor.getColumnIndex(todoTable.COLUMN_DONE)));
             todoItems.add(item);
         }
         cursor.close();

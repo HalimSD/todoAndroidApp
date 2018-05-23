@@ -47,7 +47,7 @@ public class DataItemAdapterListView extends ArrayAdapter<todoItem> {
 
         InputStream inputStream = null;
         try {
-            String imageUrl = item.getTodoPriority();
+            String imageUrl = item.getTodoPriorityIMG();
             inputStream = getContext().getAssets().open(imageUrl);
             Drawable d = Drawable.createFromStream(inputStream, null);
             imgView.setImageDrawable(d);

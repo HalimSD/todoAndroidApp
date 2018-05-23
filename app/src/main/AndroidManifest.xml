@@ -24,6 +24,11 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <activity
+            android:name=".Done"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
     </application>
 
 </manifest>
