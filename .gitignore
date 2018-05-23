@@ -78,3 +78,5 @@ app/app\.iml
 local\.properties
 
 todoAndroidApp\.iml
+
+*.properties

@@ -2,11 +2,13 @@ package groep_2.app4school;
 
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,15 +27,34 @@ public class MainActivity extends AppCompatActivity {
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
     List<String> todoTitles = new ArrayList<>();
     DataSource mDataSource;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawer = findViewById(R.id.drawer_layout);
 
 //        todoItem item = new todoItem(null, "todo title1", "first todo", "high");
 //        tvOut = (TextView) findViewById(R.id.out);
 //        tvOut.setText("");
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        drawer.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
 
         mDataSource = new DataSource(this);
         mDataSource.open();
