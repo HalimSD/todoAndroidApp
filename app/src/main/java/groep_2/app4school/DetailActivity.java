@@ -24,6 +24,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+
         todoItem item = getIntent().getExtras().getParcelable(DataItemAdapter.TODO_KEY);
         if (item == null) {
             throw new AssertionError("Null data item received!");
