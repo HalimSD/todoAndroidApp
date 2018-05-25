@@ -43,7 +43,7 @@ public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHo
 
         try {
             holder.tvName.setText(item.getTodoTitle());
-            String imageFile = item.getTodoPriority();
+            String imageFile = item.getTodoPriorityIMG();
             InputStream inputStream = mContext.getAssets().open(imageFile);
             Drawable d = Drawable.createFromStream(inputStream, null);
             holder.imageView.setImageDrawable(d);
