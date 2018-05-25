@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_highPriority:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
                     new High_priority()).commit();
                 break;
             case R.id.nav_noPriority:

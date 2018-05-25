@@ -24,11 +24,7 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme"
             />
-        <activity
-        android:name=".High_priority"
-        android:parentActivityName=".MainActivity"
-        android:theme="@style/AppTheme"
-        />
+
     </application>
 
 </manifest>
