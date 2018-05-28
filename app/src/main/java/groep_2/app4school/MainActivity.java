@@ -25,7 +25,8 @@ import groep_2.app4school.database.DataSource;
 import groep_2.app4school.model.todoItem;
 import groep_2.app4school.sample.SampleDataProvider;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class
+MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     TextView tvOut;
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
@@ -129,6 +130,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
                         new Account()).commit();
+                break;
+            case R.id.nav_settings:
+                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
+                        new SettingsActivity()).commit();
                 break;
 
         }
