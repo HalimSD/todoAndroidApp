@@ -1,6 +1,7 @@
 package groep_2.app4school;
 
 //import android.app.Fragment;
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
@@ -16,24 +17,20 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-public class SettingsActivity extends Fragment {
-    @Nullable
+public class SettingsActivity extends Activity {
+
     @Override
-
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_settings, container, false);
-    }
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_settings);
 
-        final Switch wifiSwitch = (Switch) getView().findViewById(R.id.switch1);
-        TextView textWifi = (TextView) getView().findViewById(R.id.textWifi);
+        final Switch wifiSwitch = (Switch) findViewById(R.id.switch1);
+        TextView textWifi = (TextView) findViewById(R.id.textWifi);
         Boolean wifiSwitchState = wifiSwitch.isChecked();
 
         AudioManager am;
-        final Switch silentSwitch = (Switch) getView().findViewById(R.id.switch2);
-        TextView textSilent = (TextView) getView().findViewById(R.id.textSilent);
+        final Switch silentSwitch = (Switch) findViewById(R.id.switch2);
+        TextView textSilent = (TextView) findViewById(R.id.textSilent);
         Boolean silentSwitchState = silentSwitch.isChecked();
 
 
@@ -47,8 +44,8 @@ public class SettingsActivity extends Fragment {
 
         wifiSwitch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                final WifiManager wifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                final TextView textWifi = (TextView) getView().findViewById(R.id.textWifi);
+                final WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                final TextView textWifi = (TextView) findViewById(R.id.textWifi);
                 final Boolean wifiSwitchState = wifiSwitch.isChecked();
 
                 if (!wifiSwitchState) {
@@ -71,9 +68,9 @@ public class SettingsActivity extends Fragment {
 
             public void onClick(View v) {
                 final Boolean silentSwitchState = silentSwitch.isChecked();
-                final TextView textSilent = (TextView) getView().findViewById(R.id.textSilent);
+                final TextView textSilent = (TextView) findViewById(R.id.textSilent);
                 AudioManager am;
-                am = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+                am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
                 if (!silentSwitchState){
                     am.setRingerMode(0);
@@ -88,6 +85,7 @@ public class SettingsActivity extends Fragment {
             }
 
         });
+
     }
 
 

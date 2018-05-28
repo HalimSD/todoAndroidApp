@@ -1,6 +1,7 @@
 package groep_2.app4school;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -132,14 +133,18 @@ MainActivity extends AppCompatActivity implements NavigationView.OnNavigationIte
                         new Account()).commit();
                 break;
             case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
-                        new SettingsActivity()).commit();
+                Settings();
                 break;
 
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void Settings(){
+        Intent settings = new Intent(this,SettingsActivity.class);
+        startActivity(settings);
     }
 }
 
