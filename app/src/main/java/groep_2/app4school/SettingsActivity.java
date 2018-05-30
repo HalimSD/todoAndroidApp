@@ -1,20 +1,26 @@
 package groep_2.app4school;
 
+//import android.app.Fragment;
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends Activity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
@@ -79,5 +85,11 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
         });
+
     }
+
+
+
+
+
 }
