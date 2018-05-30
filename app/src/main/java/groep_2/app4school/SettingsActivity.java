@@ -2,9 +2,12 @@ package groep_2.app4school;
 
 //import android.app.Fragment;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -28,18 +32,9 @@ public class SettingsActivity extends Activity {
         TextView textWifi = (TextView) findViewById(R.id.textWifi);
         Boolean wifiSwitchState = wifiSwitch.isChecked();
 
-        AudioManager am;
-        final Switch silentSwitch = (Switch) findViewById(R.id.switch2);
-        TextView textSilent = (TextView) findViewById(R.id.textSilent);
-        Boolean silentSwitchState = silentSwitch.isChecked();
 
-
-        if (wifiSwitch.isChecked()){
+        if (wifiSwitch.isChecked()) {
             textWifi.setText("Wifi is on");
-        }
-
-        if (silentSwitch.isChecked()){
-            textSilent.setText("Phone is on silent mode");
         }
 
         wifiSwitch.setOnClickListener(new View.OnClickListener() {
@@ -62,34 +57,38 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        silentSwitch.setOnClickListener(new View.OnClickListener(){
+
+
+
+        Switch silentSwitch = (Switch) findViewById(R.id.switch1);
+        TextView textSilent = (TextView) findViewById(R.id.textSilent);
+        final AudioManager am = (AudioManager) getSystemService(getApplicationContext().AUDIO_SERVICE);
+        /*if (silentSwitch.isChecked()) {
+            textSilent.setText("Phone is on silent mode");
+        }*/
+        silentSwitch.setOnClickListener(new View.OnClickListener() {
 
             @Override
 
             public void onClick(View v) {
-                final Boolean silentSwitchState = silentSwitch.isChecked();
-                final TextView textSilent = (TextView) findViewById(R.id.textSilent);
-                AudioManager am;
-                am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-                if (!silentSwitchState){
-                    am.setRingerMode(0);
-                    textSilent.setText ("Phone is silent");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+
+                    Intent intent = new Intent(
+                            android.provider.Settings
+                                    .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+
+                    startActivity(intent);
                 }
 
-                if (silentSwitchState){
-                    am.setRingerMode(2);
-                    textSilent.setText ("Phone is not silent");
-                }
 
+                //am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
 
         });
 
     }
-
-
-
-
-
 }
