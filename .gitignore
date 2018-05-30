@@ -78,3 +78,13 @@ app/app\.iml
 local\.properties
 
 todoAndroidApp\.iml
+
+\.gradle/4\.0/fileChanges/last-build\.bin
+
+\.gradle/4\.0/fileHashes/fileHashes\.bin
+
+\.gradle/4\.0/fileHashes/fileHashes\.lock
+
+\.gradle/buildOutputCleanup/cache\.properties
+
+\.gradle/buildOutputCleanup/
