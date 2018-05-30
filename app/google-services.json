@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "540685682152",
+    "firebase_url": "https://copper-sol-205214.firebaseio.com",
+    "project_id": "copper-sol-205214",
+    "storage_bucket": "copper-sol-205214.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:540685682152:android:8e0e526b48fe1720",
+        "android_client_info": {
+          "package_name": "groep_2.app4school"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "540685682152-fee40og0km9uk98js27utq9mnv3h67tk.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "540685682152-vldivgppp2rca158cfknurhic3ie5ter.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "540685682152-osvp2go92teshaqocj5kciuk065igjlc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "groep_2.app4school",
+            "certificate_hash": "ddd35203c42983d26b9141981975cd3dc5e14cfe"
+          }
+        },
+        {
+          "client_id": "540685682152-fee40og0km9uk98js27utq9mnv3h67tk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbTa0c-cggPbeOX8eTxwO9LAhYZcTxD6I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "540685682152-fee40og0km9uk98js27utq9mnv3h67tk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
