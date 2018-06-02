@@ -19,6 +19,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tvName, tvDescription, tvDuo, tvStatus, tvPriority;
     private ImageView itemImage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
