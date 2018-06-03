@@ -35,7 +35,12 @@
             android:theme="@style/AppTheme"
             />
         <activity
-        android:name=".callApi"
+            android:name=".callApi"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme"
+            />
+        <activity
+        android:name=".addTodo"
         android:parentActivityName=".MainActivity"
         android:theme="@style/AppTheme"
         />

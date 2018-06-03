@@ -13,12 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import com.google.android.gms.common.SignInButton;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,9 +40,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
 //    List<String> todoTitles = new ArrayList<>();
     DataSource mDataSource;
-    public Button mButton;
+    public Button mButton, addButton;
     public FirebaseAuth mAuth;
     public Button accbtn;
+    ListView listViewTodo;
+    DatabaseReference databaseTodo;
+    List<todo> todolist;
 
 
 
@@ -62,14 +72,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDataSource = new DataSource(this);
         mDataSource.open();
         mDataSource.insertDatabase(todoItemList);
+        listViewTodo = findViewById(R.id.listViewTodo);
+        todolist = new ArrayList<>();
+
+        databaseTodo = FirebaseDatabase.getInstance().getReference("todos");
+
         Toast.makeText(this, "Database acquired", Toast.LENGTH_SHORT).show();
 
-        List<todoItem> ListFromDB = mDataSource.getAllItems();
+//        List<todoItem> ListFromDB = mDataSource.getAllItems();
 
-        DataItemAdapter adapter = new DataItemAdapter(this, ListFromDB);
+//        DataItemAdapter adapter = new DataItemAdapter(this, ListFromDB);
 
-        RecyclerView recyclerView = findViewById(android.R.id.list);
-        recyclerView.setAdapter(adapter);
+//        RecyclerView recyclerView = findViewById(android.R.id.list);
+//        recyclerView.setAdapter(adapter);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -97,10 +112,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 openCallApiActivity();
             }
         });
+        addButton = findViewById(R.id.gotoadd);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAdd();
+            }
+        });
     }
 
     public void openCallApiActivity() {
         Intent intent = new Intent(this, callApi.class);
+        startActivity(intent);
+        finish();
+    }
+    public void openAdd() {
+        Intent intent = new Intent(this, addTodo.class);
         startActivity(intent);
         finish();
     }
@@ -115,6 +142,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 // else {
 //            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
 //        }
+
+        databaseTodo.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                todolist.clear();
+                for(DataSnapshot todoSnapshot : dataSnapshot.getChildren()){
+                    todo todo = todoSnapshot.getValue(todo.class);
+                    todolist.add(todo);
+                }
+                todoList adapter = new todoList(MainActivity.this, todolist);
+                listViewTodo.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void sendToLogin() {
