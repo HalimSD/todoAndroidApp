@@ -62,5 +62,14 @@
                     android:title="Settings"/>
             </menu>
         </item>
+
+        <item android:title="Settings">
+            <menu>
+                <item
+                    android:id="@+id/not_test"
+                    android:icon="@drawable/ic_settings"
+                    android:title="Notif_test"/>
+            </menu>
+        </item>
     </group>
 </menu>

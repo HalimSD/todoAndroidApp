@@ -74,13 +74,14 @@
             android:layout_alignParentStart="true"
             android:text="Call Google Calendar Api" />
 
-        <!--<Button-->
-            <!--android:id="@+id/gotoadd"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_above="@+id/callApi"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:text="add todo" />-->
+        <Button
+            android:id="@+id/gotoad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/callApi"
+            android:layout_alignParentStart="true"
+            android:text="add todo"
+            android:onClick="sendNotification"/>
 
 
     </RelativeLayout>
