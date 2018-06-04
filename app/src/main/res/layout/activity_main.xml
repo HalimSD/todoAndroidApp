@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="groep_2.app4school.MainActivity">
+    tools:context="groep_2.app4school.MainActivity"
+    >
     <!--tools:openDrawer="start"-->
 
 
@@ -37,8 +38,9 @@
             android:id="@+id/listViewTodo"
             android:layout_width="match_parent"
             android:layout_height="414dp"
-            android:layout_above="@+id/gotoadd"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="63dp" />
 
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -50,6 +52,21 @@
 
         </FrameLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/gotoadd"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_action_add"
+            app:elevation="5dp"
+            app:backgroundTint="@color/colorPrimary"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            app:borderWidth="0dp"
+            app:rippleColor="@color/colorPrimaryDark" />
+
         <Button
             android:id="@+id/callApi"
             android:layout_width="374dp"
@@ -58,13 +75,13 @@
             android:layout_alignParentStart="true"
             android:text="Call Google Calendar Api" />
 
-        <Button
-            android:id="@+id/gotoadd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/callApi"
-            android:layout_alignParentStart="true"
-            android:text="add todo" />
+        <!--<Button-->
+            <!--android:id="@+id/gotoadd"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_above="@+id/callApi"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:text="add todo" />-->
 
 
     </RelativeLayout>
@@ -78,6 +95,15 @@
         app:headerLayout="@layout/nav_header"
         android:fitsSystemWindows="true"
         app:menu="@menu/drawer_menu" >
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|end"-->
+            <!--android:layout_margin="16dp"-->
+            <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
+
 
     </android.support.design.widget.NavigationView>
 

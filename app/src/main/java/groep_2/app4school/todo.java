@@ -6,13 +6,15 @@ public class todo {
     String todoDescription;
     String todoDeadline;
     String todoPriority;
+    String todoStatus;
 
-    public todo(String todoID, String todoTitle, String todoDescription, String todoDeadline, String todoPriority) {
+    public todo(String todoID, String todoTitle, String todoDescription, String todoDeadline, String todoPriority, String todoStatus) {
         this.todoID = todoID;
         this.todoTitle = todoTitle;
         this.todoDescription = todoDescription;
         this.todoDeadline = todoDeadline;
         this.todoPriority = todoPriority;
+        this.todoStatus = todoStatus;
     }
 
     public todo (){
@@ -24,9 +26,7 @@ public class todo {
         return todoID;
     }
 
-    public String getTodoTitle() {
-        return todoTitle;
-    }
+    public String getTodoTitle() { return todoTitle; }
 
     public String getTodoDescription() {
         return todoDescription;
@@ -38,5 +38,9 @@ public class todo {
 
     public String getTodoPriority() {
         return todoPriority;
+    }
+
+    public String getTodoStatus() {
+        return todoStatus;
     }
 }

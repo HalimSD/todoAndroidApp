@@ -1,8 +1,11 @@
 package groep_2.app4school;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,10 +13,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.SignInButton;
 import com.google.api.services.calendar.CalendarScopes;
@@ -26,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,14 +51,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
 //    List<String> todoTitles = new ArrayList<>();
     DataSource mDataSource;
-    public Button mButton, addButton;
+    public Button mButton;
     public FirebaseAuth mAuth;
     public Button accbtn;
-    ListView listViewTodo;
     DatabaseReference databaseTodo;
+    ListView listViewTodo;
     List<todo> todolist;
+    FloatingActionButton addButton;
+    Button updateBtn;
 
-
+    public static final String todo_title= "todo_title";
+    public static final String todo_id = "todo_id";
+    public static final String todo_description = "todo_description";
+    public static final String todo_status = "todo_status";
+    public static final String todo_deadline = "todo_deadline";
+    public static final String todo_priority = "todo_priority";
 
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -105,6 +123,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //            navigationView.setCheckedItem(R.id.fragment_container);
     //        }
 
+
+        listViewTodo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                todo todo = todolist.get(position);
+                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+                intent.putExtra(todo_id, todo.getTodoID());
+                intent.putExtra(todo_title, todo.getTodoTitle());
+                intent.putExtra(todo_description, todo.getTodoDescription());
+                intent.putExtra(todo_deadline, todo.getTodoDeadline());
+                intent.putExtra(todo_status, todo.getTodoStatus());
+                startActivity(intent);
+            }
+        });
+        listViewTodo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                todo todoList = todolist.get(position);
+                updateDialog(todoList.getTodoID(),todoList.getTodoTitle() );
+                return false;
+            }
+        });
         mButton = findViewById(R.id.callApi);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +160,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+    private void updateDialog(final String todoID, String todoTitle){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.update_dialog, null);
+        dialogBuilder.setView(dialogView);
+        final TextView editTitle = dialogView.findViewById(R.id.editTitle);
+        final EditText editDescription = dialogView.findViewById(R.id.editDescription);
+        final Spinner editPriority = dialogView.findViewById(R.id.editPriority);
+        final EditText editDeadline = dialogView.findViewById(R.id.editDeadline);
+        final Spinner editStatus = dialogView.findViewById(R.id.editStatus);
+        final Button updateBtn = dialogView.findViewById(R.id.updateBtn);
+        final Button deleteBtn = dialogView.findViewById(R.id.deleteBtn);
+
+        dialogBuilder.setTitle("Updating a todo " + todoTitle);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = editTitle.getText().toString().trim();
+                String priority = editPriority.getSelectedItem().toString();
+                String description = editDescription.getText().toString().trim();
+                String deadline = editDeadline.getText().toString().trim();
+                String status = editStatus.getSelectedItem().toString();
+
+                if (TextUtils.isEmpty(title)){
+                    editTitle.setError("Title required!");
+                    return;
+                }
+                updatebtnhandler(todoID, title,priority,description,deadline,status);
+                alertDialog.dismiss();
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteTodo(todoID);
+            }
+        });
+
+    }
+
+    private boolean updatebtnhandler (String id, String title, String description, String priority, String status, String deadline){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        todo todo = new todo(id, title, description,priority, status, deadline);
+        databaseReference.setValue(todo);
+        Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    private void deleteTodo(String id){
+        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        dfDelete.removeValue();
+        Toast.makeText(this,"The todo is deleted!", Toast.LENGTH_SHORT).show();
+
+    }
 
     public void openCallApiActivity() {
         Intent intent = new Intent(this, callApi.class);
@@ -129,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void openAdd() {
         Intent intent = new Intent(this, addTodo.class);
         startActivity(intent);
-        finish();
     }
 
     @Override
@@ -161,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
 
     private void sendToLogin() {
         Intent loginIntent = new Intent(this , Account.class);
