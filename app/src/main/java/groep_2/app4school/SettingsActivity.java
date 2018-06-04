@@ -74,12 +74,12 @@ public class SettingsActivity extends Activity {
 
                 if (!silentSwitchState){
                     am.setRingerMode(0);
-                    textSilent.setText ("Phone is silent");
+                    textSilent.setText ("Sound off");
                 }
 
                 if (silentSwitchState){
                     am.setRingerMode(2);
-                    textSilent.setText ("Phone is not silent");
+                    textSilent.setText ("Sound on");
                 }
 
             }

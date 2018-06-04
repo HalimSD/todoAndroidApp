@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null){
-            sendToLogin();
+            //sendToLogin();
         }
 // else {
 //            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
@@ -318,6 +318,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Done()).addToBackStack(null).commit();
                 break;
+
+            case R.id.nav_settings:
+                Settings();
 //            case R.id.nav_account:
 //                Intent newActo = new Intent(this, Account.class);
 //                startActivity(newActo);
@@ -338,6 +341,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
 
+    }
+
+    public void Settings(){
+        Intent settings = new Intent(this,SettingsActivity.class);
+        startActivity(settings);
     }
 
     static class ViewHolder {
