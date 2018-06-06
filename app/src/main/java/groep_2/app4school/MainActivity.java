@@ -112,6 +112,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        RecyclerView recyclerView = findViewById(android.R.id.list);
 //        recyclerView.setAdapter(adapter);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.pref_header_notifications);
+            String description = getString(R.string.pref_default_display_name);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("channel_01", "Default", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -241,9 +252,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
-            sendToLogin();
-        }
+//        if (currentUser == null){
+//            sendToLogin();
+//        }
 // else {
 //            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
 //        }
