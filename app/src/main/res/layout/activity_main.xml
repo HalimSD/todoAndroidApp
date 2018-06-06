@@ -25,30 +25,65 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <view
-            android:id="@android:id/list"
-            class="android.support.v7.widget.RecyclerView"
+        <!--<view-->
+            <!--android:id="@android:id/list"-->
+            <!--class="android.support.v7.widget.RecyclerView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="603dp"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_below="@+id/toolbar"-->
+            <!--app:layoutManager="LinearLayoutManager" />-->
+        <ListView
+            android:id="@+id/listViewTodo"
             android:layout_width="match_parent"
-            android:layout_height="603dp"
+            android:layout_height="414dp"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/toolbar"
-            app:layoutManager="LinearLayoutManager" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="63dp" />
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true">
+
+
+        </FrameLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/gotoadd"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_action_add"
+            app:elevation="5dp"
+            app:backgroundTint="@color/colorPrimary"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            app:borderWidth="0dp"
+            app:rippleColor="@color/colorPrimaryDark" />
 
         <Button
             android:id="@+id/callApi"
             android:layout_width="374dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="139dp"
+            android:layout_alignParentStart="true"
             android:text="Call Google Calendar Api" />
+
+        <Button
+            android:id="@+id/gotoad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/callApi"
+            android:layout_alignParentStart="true"
+            android:text="add todo"
+            android:onClick="sendNotification"/>
+
+
     </RelativeLayout>
 
 
@@ -59,7 +94,18 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         android:fitsSystemWindows="true"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/drawer_menu" >
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/fab"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|end"-->
+            <!--android:layout_margin="16dp"-->
+            <!--app:srcCompat="@android:drawable/ic_dialog_email" />-->
+
+
+    </android.support.design.widget.NavigationView>
 
 
 </android.support.v4.widget.DrawerLayout>

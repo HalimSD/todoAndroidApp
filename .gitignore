@@ -26,6 +26,7 @@ local.properties
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 *.iml
+*.idea
 
 # OS-specific files
 .DS_Store
@@ -35,6 +36,7 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+<<<<<<< HEAD
 
 \.idea/caches/build_file_checksums\.ser
 
@@ -43,3 +45,9 @@ Thumbs.db
 \.idea/kotlinc\.xml
 
 app/build\.gradle
+||||||| merged common ancestors
+=======
+
+
+
+>>>>>>> test4

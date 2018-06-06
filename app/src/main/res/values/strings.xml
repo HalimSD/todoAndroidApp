@@ -3,6 +3,15 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_settings">Settings</string>
+    <array name="priority">
+        <item>High</item>
+        <item>Low</item>
+        <item>Neutral</item>
+    </array>
+    <array name="Status">
+        <item>In progress</item>
+        <item>Done</item>
+    </array>
 
     <!-- Strings related to Settings -->
 
@@ -75,7 +84,9 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-
-    <string name="notification_channel">TheOnlyChannel</string>
-
+    <string name="title_activity_high_priority">HighPriority</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
