@@ -12,6 +12,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -26,13 +27,13 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <!--<view-->
-            <!--android:id="@android:id/list"-->
-            <!--class="android.support.v7.widget.RecyclerView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="603dp"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_below="@+id/toolbar"-->
-            <!--app:layoutManager="LinearLayoutManager" />-->
+        <!--android:id="@android:id/list"-->
+        <!--class="android.support.v7.widget.RecyclerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="603dp"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/toolbar"-->
+        <!--app:layoutManager="LinearLayoutManager" />-->
         <ListView
             android:id="@+id/listViewTodo"
             android:layout_width="match_parent"
@@ -55,16 +56,17 @@
             android:id="@+id/gotoadd"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/ic_action_add"
-            app:elevation="5dp"
-            app:backgroundTint="@color/colorPrimary"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
+            android:src="@drawable/ic_action_add"
+            app:backgroundTint="@color/colorPrimary"
             app:borderWidth="0dp"
-            app:rippleColor="@color/colorPrimaryDark" />
+            app:elevation="5dp"
+            app:rippleColor="@color/colorPrimaryDark"
+            app:fabSize="mini"/>
 
         <Button
             android:id="@+id/callApi"
@@ -80,8 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/callApi"
             android:layout_alignParentStart="true"
-            android:text="add todo"
-            android:onClick="sendNotification"/>
+            android:onClick="sendNotification"
+            android:text="add todo" />
 
 
     </RelativeLayout>

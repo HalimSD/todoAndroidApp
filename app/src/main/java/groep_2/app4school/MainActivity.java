@@ -1,7 +1,6 @@
 package groep_2.app4school;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,13 +25,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.common.SignInButton;
+
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,11 +38,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import groep_2.app4school.database.DataSource;
@@ -55,9 +53,9 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
     private DrawerLayout drawer;
-//    TextView tvOut;
+    //    TextView tvOut;
     List<todoItem> todoItemList = SampleDataProvider.dataItemList;
-//    List<String> todoTitles = new ArrayList<>();
+    //    List<String> todoTitles = new ArrayList<>();
     DataSource mDataSource;
     public Button mButton;
     public FirebaseAuth mAuth;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FloatingActionButton addButton;
     Button updateBtn;
 
-    public static final String todo_title= "todo_title";
+    public static final String todo_title = "todo_title";
     public static final String todo_id = "todo_id";
     public static final String todo_description = "todo_description";
     public static final String todo_status = "todo_status";
@@ -86,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         todolist = new ArrayList<>();
 
         databaseTodo = FirebaseDatabase.getInstance().getReference("todos");
+        Query query = databaseTodo.orderByChild("todoPriority").equalTo("High");
+//        query.addListenerForSingleValueEvent(databaseTodo.valu);
 
         Toast.makeText(this, "Database acquired", Toast.LENGTH_SHORT).show();
 
@@ -136,11 +134,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-    //        if (savedInstanceState == null) {
-    //            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-    //                    new Done()).commit();
-    //            navigationView.setCheckedItem(R.id.fragment_container);
-    //        }
+        //        if (savedInstanceState == null) {
+        //            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+        //                    new Done()).commit();
+        //            navigationView.setCheckedItem(R.id.fragment_container);
+        //        }
 
 
         listViewTodo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todo todoList = todolist.get(position);
-                updateDialog(todoList.getTodoID(),todoList.getTodoTitle() );
+                updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
                 return false;
             }
         });
@@ -179,15 +177,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-    private void updateDialog(final String todoID, String todoTitle){
+
+    private void updateDialog(final String todoID, String todoTitle) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.update_dialog, null);
         dialogBuilder.setView(dialogView);
         final TextView editTitle = dialogView.findViewById(R.id.editTitle);
         final EditText editDescription = dialogView.findViewById(R.id.editDescription);
-        final Spinner editPriority = dialogView.findViewById(R.id.editPriority);
         final EditText editDeadline = dialogView.findViewById(R.id.editDeadline);
+        final Spinner editPriority = dialogView.findViewById(R.id.editPriority);
         final Spinner editStatus = dialogView.findViewById(R.id.editStatus);
         final Button updateBtn = dialogView.findViewById(R.id.updateBtn);
         final Button deleteBtn = dialogView.findViewById(R.id.deleteBtn);
@@ -200,16 +199,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 String title = editTitle.getText().toString().trim();
-                String priority = editPriority.getSelectedItem().toString();
                 String description = editDescription.getText().toString().trim();
                 String deadline = editDeadline.getText().toString().trim();
+                String priority = editPriority.getSelectedItem().toString();
                 String status = editStatus.getSelectedItem().toString();
 
-                if (TextUtils.isEmpty(title)){
+                if (TextUtils.isEmpty(title)) {
                     editTitle.setError("Title required!");
                     return;
                 }
-                updatebtnhandler(todoID, title,priority,description,deadline,status);
+                updatebtnhandler(todoID, title,description,deadline, priority, status);
                 alertDialog.dismiss();
             }
         });
@@ -223,18 +222,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private boolean updatebtnhandler (String id, String title, String description, String priority, String status, String deadline){
+    private boolean updatebtnhandler(String id, String title,String description, String deadline, String priority,  String status) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
-        todo todo = new todo(id, title, description,priority, status, deadline);
+        todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
         Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show();
         return true;
     }
 
-    private void deleteTodo(String id){
+    private void deleteTodo(String id) {
         DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
         dfDelete.removeValue();
-        Toast.makeText(this,"The todo is deleted!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "The todo is deleted!", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -243,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
         finish();
     }
+
     public void openAdd() {
         Intent intent = new Intent(this, addTodo.class);
         startActivity(intent);
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 todolist.clear();
-                for(DataSnapshot todoSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot todoSnapshot : dataSnapshot.getChildren()) {
                     todo todo = todoSnapshot.getValue(todo.class);
                     todolist.add(todo);
                 }
@@ -280,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void sendToLogin() {
-        Intent loginIntent = new Intent(this , Account.class);
-       startActivity(loginIntent);
+        Intent loginIntent = new Intent(this, Account.class);
+        startActivity(loginIntent);
         finish();
     }
 
@@ -311,31 +311,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_highPriority:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new High_priority()).addToBackStack(null).commit();
+                        new High_priority()).commit();
                 break;
             case R.id.nav_noPriority:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new No_priority()).addToBackStack(null).commit();
+                        new No_priority()).commit();
                 break;
             case R.id.nav_lowPriority:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new Low_priority()).addToBackStack(null).commit();
+                        new Low_priority()).commit();
                 break;
             case R.id.nav_3days:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new days()).addToBackStack(null).commit();
+                        new days()).commit();
                 break;
             case R.id.nav_week:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new week()).addToBackStack(null).commit();
+                        new week()).commit();
                 break;
             case R.id.nav_month:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new month()).addToBackStack(null).commit();
+                        new month()).commit();
                 break;
             case R.id.nav_done:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new Done()).addToBackStack(null).commit();
+                        new Done()).commit();
                 break;
 
             case R.id.nav_settings:
@@ -362,8 +362,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void Settings(){
-        Intent settings = new Intent(this,SettingsActivity.class);
+    public void Settings() {
+        Intent settings = new Intent(this, SettingsActivity.class);
         startActivity(settings);
     }
 
@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toast.show();
 
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this,"channel_01");
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "channel_01");
 
         //Create the intent that’ll fire when the user taps the notification//
 
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar;
         @BindView(android.R.id.list)
         RecyclerView list;
-//        @BindView(R.id.googleBtn)
+        //        @BindView(R.id.googleBtn)
 //        SignInButton googleBtn;
         @BindView(R.id.callApi)
         Button callApi;
