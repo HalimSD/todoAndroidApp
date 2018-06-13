@@ -21,17 +21,9 @@
             android:icon="@drawable/ic_low_priority"
             android:title="Low priority" />
         <item
-            android:id="@+id/nav_3days"
-            android:icon="@drawable/ic_3days"
-            android:title="3 days" />
-        <item
-            android:id="@+id/nav_week"
-            android:icon="@drawable/ic_week"
-            android:title="Week" />
-        <item
-            android:id="@+id/nav_month"
-            android:icon="@drawable/ic_month"
-            android:title="Month" />
+        android:id="@+id/nav_googleAPI"
+        android:icon="@drawable/ic_date"
+        android:title="Call google calendar" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
