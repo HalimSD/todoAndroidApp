@@ -32,7 +32,6 @@ public class todoList extends ArrayAdapter<todo>{
         todo todo = todoList.get(position);
         textViewTitle.setText(todo.getTodoTitle());
         textViewPriority.setText(todo.getTodoPriority());
-
         return listViewItem;
 
     }
