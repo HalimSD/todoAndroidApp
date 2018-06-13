@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void openCallApiActivity() {
         Intent intent = new Intent(this, callApi.class);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     public void openAdd() {
@@ -321,18 +321,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Low_priority()).commit();
                 break;
-            case R.id.nav_3days:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new days()).commit();
+            case R.id.nav_googleAPI:
+                openCallApiActivity();
                 break;
-            case R.id.nav_week:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new week()).commit();
-                break;
-            case R.id.nav_month:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new month()).commit();
-                break;
+//            case R.id.nav_3days:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new days()).commit();
+//                break;
+//            case R.id.nav_week:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new week()).commit();
+//                break;
+//            case R.id.nav_month:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new month()).commit();
+//                break;
             case R.id.nav_done:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Done()).commit();
