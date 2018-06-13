@@ -162,13 +162,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
-        mButton = findViewById(R.id.callApi);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCallApiActivity();
-            }
-        });
+//        mButton = findViewById(R.id.callApi);
+//        mButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openCallApiActivity();
+//            }
+//        });
         addButton = findViewById(R.id.gotoadd);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,18 +321,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Low_priority()).commit();
                 break;
-            case R.id.nav_3days:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new days()).commit();
+            case R.id.nav_googleAPI:
+                openCallApiActivity();
                 break;
-            case R.id.nav_week:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new week()).commit();
-                break;
-            case R.id.nav_month:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new month()).commit();
-                break;
+//            case R.id.nav_3days:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new days()).commit();
+//                break;
+//            case R.id.nav_week:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new week()).commit();
+//                break;
+//            case R.id.nav_month:
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                        new month()).commit();
+//                break;
             case R.id.nav_done:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Done()).commit();
@@ -403,8 +406,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView list;
         //        @BindView(R.id.googleBtn)
 //        SignInButton googleBtn;
-        @BindView(R.id.callApi)
-        Button callApi;
+//        @BindView(R.id.callApi)
+//        Button callApi;
         @BindView(R.id.nav_view)
         NavigationView navView;
         @BindView(R.id.drawer_layout)
