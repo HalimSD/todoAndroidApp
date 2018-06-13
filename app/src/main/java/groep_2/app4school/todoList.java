@@ -28,10 +28,12 @@ public class todoList extends ArrayAdapter<todo>{
         View listViewItem = inflater.inflate(R.layout.todo_list, null, true);
         TextView textViewTitle = listViewItem.findViewById(R.id.title);
         TextView textViewPriority = listViewItem.findViewById(R.id.priority);
+        TextView textViewDescription = listViewItem.findViewById(R.id.description);
 
         todo todo = todoList.get(position);
         textViewTitle.setText(todo.getTodoTitle());
         textViewPriority.setText(todo.getTodoPriority());
+        textViewDescription.setText(todo.getTodoDescription());
 
         return listViewItem;
 

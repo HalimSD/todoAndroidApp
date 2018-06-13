@@ -90,5 +90,5 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-
+    <color name="Seashell">#FFF5EE</color>
 </resources>
