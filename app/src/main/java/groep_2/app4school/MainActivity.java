@@ -162,13 +162,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return false;
             }
         });
-        mButton = findViewById(R.id.callApi);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openCallApiActivity();
-            }
-        });
+//        mButton = findViewById(R.id.callApi);
+//        mButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openCallApiActivity();
+//            }
+//        });
         addButton = findViewById(R.id.gotoadd);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -406,8 +406,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView list;
         //        @BindView(R.id.googleBtn)
 //        SignInButton googleBtn;
-        @BindView(R.id.callApi)
-        Button callApi;
+//        @BindView(R.id.callApi)
+//        Button callApi;
         @BindView(R.id.nav_view)
         NavigationView navView;
         @BindView(R.id.drawer_layout)
