@@ -252,12 +252,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser == null){
-//            sendToLogin();
-//        }
-// else {
-//            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
-//        }
+        if (currentUser == null){
+            sendToLogin();
+        }
+ else {
+            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
+        }
 
         databaseTodo.addValueEventListener(new ValueEventListener() {
             @Override
@@ -340,9 +340,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Done()).commit();
                 break;
+            case R.id.nav_InProgress:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new InProgress()).commit();
+                break;
 
             case R.id.nav_settings:
                 Settings();
+                break;
+
+            case R.id.nav_home:
+                home();
+                break;
+//            case R.id.nav_InProgress:
+//                progress();
+//                break;
 //            case R.id.nav_account:
 //                Intent newActo = new Intent(this, Account.class);
 //                startActivity(newActo);
@@ -364,6 +376,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onPermissionsDenied(int requestCode, List<String> perms) {
 
     }
+
+    public void home() {
+        Intent home = new Intent(this, MainActivity.class);
+        startActivity(home);
+        finish();
+    }
+//    public void progress() {
+//        Intent progress = new Intent(this, InProgress.class);
+//        startActivity(progress);
+//        finish();
+//    }
 
     public void Settings() {
         Intent settings = new Intent(this, SettingsActivity.class);

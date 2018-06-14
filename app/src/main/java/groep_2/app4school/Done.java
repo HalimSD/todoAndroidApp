@@ -1,6 +1,7 @@
 package groep_2.app4school;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,14 @@ public class Done extends Fragment{
 
     List<todo> todolist;
     ListView listViewDone;
+
+    public static final String todo_title = "todo_title";
+    public static final String todo_id = "todo_id";
+    public static final String todo_description = "todo_description";
+    public static final String todo_status = "todo_status";
+    public static final String todo_deadline = "todo_deadline";
+    public static final String todo_priority = "todo_priority";
+
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +74,19 @@ public class Done extends Fragment{
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+        listViewDone.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                todo todo = todolist.get(position);
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(todo_id, todo.getTodoID());
+                intent.putExtra(todo_title, todo.getTodoTitle());
+                intent.putExtra(todo_description, todo.getTodoDescription());
+                intent.putExtra(todo_deadline, todo.getTodoDeadline());
+                intent.putExtra(todo_status, todo.getTodoStatus());
+                startActivity(intent);
             }
         });
         listViewDone.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

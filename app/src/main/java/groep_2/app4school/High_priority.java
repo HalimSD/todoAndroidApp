@@ -80,6 +80,19 @@ public class High_priority extends Fragment{
 
             }
         });
+        listViewHighPriority.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                todo todo = todolist.get(position);
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(todo_id, todo.getTodoID());
+                intent.putExtra(todo_title, todo.getTodoTitle());
+                intent.putExtra(todo_description, todo.getTodoDescription());
+                intent.putExtra(todo_deadline, todo.getTodoDeadline());
+                intent.putExtra(todo_status, todo.getTodoStatus());
+                startActivity(intent);
+            }
+        });
         listViewHighPriority.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

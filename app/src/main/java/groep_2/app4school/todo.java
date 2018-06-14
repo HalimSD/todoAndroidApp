@@ -8,7 +8,7 @@ public class todo {
     String todoPriority;
     String todoStatus;
 
-    public todo(String todoID, String todoTitle, String todoDescription, String todoDeadline, String todoPriority, String todoStatus) {
+    public todo(String todoID, String todoTitle, String todoDescription,  String todoDeadline, String todoPriority ,String todoStatus) {
         this.todoID = todoID;
         this.todoTitle = todoTitle;
         this.todoDescription = todoDescription;

@@ -34,17 +34,17 @@ import static groep_2.app4school.MainActivity.todo_id;
 import static groep_2.app4school.MainActivity.todo_status;
 import static groep_2.app4school.MainActivity.todo_title;
 
-public class Low_priority extends Fragment{
+public class InProgress extends Fragment{
 
     List<todo> todolist;
-    ListView listViewLowPriority;
+    ListView listViewInProgress;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         todolist = new ArrayList<>();
 
-        View view =  inflater.inflate(R.layout.low_priority, container, false);
-        listViewLowPriority =view.findViewById(R.id.listViewLowPriority);
+        View view =  inflater.inflate(R.layout.in_progress, container, false);
+        listViewInProgress =view.findViewById(R.id.listViewInProgress);
         return view;
     }
 
@@ -53,7 +53,7 @@ public class Low_priority extends Fragment{
         super.onStart();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.child("todos").orderByChild("todoPriority").equalTo("Low");
+        Query query = reference.child("todos").orderByChild("todoStatus").equalTo("In Progress");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -65,7 +65,7 @@ public class Low_priority extends Fragment{
                         todolist.add(todo);
                     }
                     todoList adapter = new todoList(getActivity(), todolist);
-                    listViewLowPriority.setAdapter(adapter);
+                    listViewInProgress.setAdapter(adapter);
                 }
             }
 
@@ -74,7 +74,7 @@ public class Low_priority extends Fragment{
 
             }
         });
-        listViewLowPriority.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewInProgress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 todo todo = todolist.get(position);
@@ -87,7 +87,7 @@ public class Low_priority extends Fragment{
                 startActivity(intent);
             }
         });
-        listViewLowPriority.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listViewInProgress.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todo todoList = todolist.get(position);

@@ -51,6 +51,23 @@
         app:layout_constraintTop_toTopOf="@+id/title"
         app:layout_constraintVertical_bias="0.371" />
 
+    <Button
+        android:id="@+id/todoDatePiker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Choose Date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/deadline"
+        app:layout_constraintHorizontal_bias="0.296"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.624" />
+
+
     <EditText
         android:id="@+id/deadline"
         android:layout_width="wrap_content"
@@ -59,16 +76,20 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:ems="10"
         android:digits=""
+        android:ems="10"
         android:hint="deadline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.601" />
-
+        app:layout_constraintVertical_bias="0.625" />
+    <!--<DatePicker-->
+        <!--android:id="@+id/dpResult"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" -->
+        <!--/>-->
     <Button
         android:id="@+id/reminder"
         android:layout_width="wrap_content"
@@ -121,8 +142,8 @@
         android:text="add todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.957"
-        tools:layout_editor_absoluteX="155dp" />
+        app:layout_constraintVertical_bias="0.918"
+        tools:layout_editor_absoluteX="8dp" />
 
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/dateBtn"-->

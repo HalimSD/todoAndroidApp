@@ -3,6 +3,7 @@ package groep_2.app4school;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -36,14 +37,17 @@ public class addTodo extends Activity {
     Spinner todoStatus;
     EditText todoTitle, todoDescription, todoDeadline;
     CheckBox todoDone;
-//    Switch todoReminder;
     Button addTodoBtn, todoReminder;
     ListView listViewTodo;
     List<todo> todolist;
     DatabaseReference databaseTodo;
-//    FloatingActionButton dateBtn;
     Calendar mCurrentDate;
     int day, month, year;
+    private int todoYear;
+    private int todoMonth;
+    private int todoDay;
+    private Button todoDatePiker;
+    static final int DATE_DIALOG_ID = 0;
 
 
     @Override
@@ -54,6 +58,7 @@ public class addTodo extends Activity {
         databaseTodo = FirebaseDatabase.getInstance().getReference("todos");
 
         todoPriority = findViewById(R.id.priority);
+        todoDatePiker = findViewById(R.id.todoDatePiker);
         todoStatus = findViewById(R.id.status);
         todoTitle = findViewById(R.id.title);
         todoDescription = findViewById(R.id.description);
@@ -73,21 +78,16 @@ public class addTodo extends Activity {
             }
         });
 
-        todoDeadline.setOnClickListener(new View.OnClickListener() {
-            @Override
+        todoDatePiker.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DatePickerDialog dateDialog = new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String format = new SimpleDateFormat("dd MMM YYYY").format(Calendar.getInstance().getTime());
-                        todoDeadline.setText(format);
-                    }
-                }, year,month,day);
-                dateDialog.getDatePicker().setMinDate(new Date().getTime());
-                dateDialog.show();
+                showDialog(DATE_DIALOG_ID);
             }
         });
+        final Calendar c = Calendar.getInstance();
+        todoYear = c.get(Calendar.YEAR);
+        todoMonth = c.get(Calendar.MONTH);
+        todoDay = c.get(Calendar.DAY_OF_MONTH);
+        updateDisplay();
 
     }
 
@@ -109,5 +109,38 @@ public class addTodo extends Activity {
 
             Toast.makeText(this, "Enter a todo", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+
+
+
+    private void updateDisplay() {
+        this.todoDeadline.setText(
+                new StringBuilder()
+                        .append(todoDay).append("-")
+                        .append(todoMonth + 1).append("-")
+                        .append(todoYear).append(" "));
+    }
+    private DatePickerDialog.OnDateSetListener Date =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    todoYear = year;
+                    todoMonth = monthOfYear;
+                    todoDay = dayOfMonth;
+                    updateDisplay();
+                }
+            };
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(this,
+                        Date,
+                        todoYear, todoMonth, todoDay);
+        }
+        return null;
     }
 }
