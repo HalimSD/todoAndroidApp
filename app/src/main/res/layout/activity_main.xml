@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="groep_2.app4school.MainActivity">
+    tools:context="groep_2.app4school.MainActivity"
+    >
     <!--tools:openDrawer="start"-->
 
 

@@ -74,6 +74,7 @@ public class addTodo extends Activity {
             @Override
             public void onClick(View v) {
                 setAddTodo();
+                finish();
 
             }
         });
