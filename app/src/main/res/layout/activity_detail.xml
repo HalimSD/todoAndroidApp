@@ -60,6 +60,23 @@
         android:text="Todo description:"
         tools:ignore="HardcodedText" />
 
+    <!--<Button-->
+        <!--android:id="@+id/deleteDetails"-->
+        <!--android:text="Delete todo"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/deleteDetails"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_delete"
+        app:backgroundTint="@color/colorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="5dp"
+        app:rippleColor="@color/colorPrimaryDark"
+        app:fabSize="mini"/>
 
 </LinearLayout>
 
