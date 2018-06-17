@@ -337,48 +337,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-        choose.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(DATE_DIALOG_ID);
-            }
-        });
+//        choose.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                showDialog(DATE_DIALOG_ID);
+//            }
+//        });
 
     }
 
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                return new DatePickerDialog(this,
-                        Date,
-                        todoYear, todoMonth, todoDay);
-        }
-        return null;
-    }
+//    @Override
+//    protected Dialog onCreateDialog(int id) {
+//        switch (id) {
+//            case DATE_DIALOG_ID:
+//                return new DatePickerDialog(this,
+//                        Date,
+//                        todoYear, todoMonth, todoDay);
+//        }
+//        return null;
+//    }
 
-    private DatePickerDialog.OnDateSetListener Date =
-            new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    todoYear = year;
-                    todoMonth = monthOfYear;
-                    todoDay = dayOfMonth;
-                    updateDisplay();
-                    Log.v(String.valueOf(Date), "==========================================================================================================================================================================================");
-
-                }
-
-                private void updateDisplay() {
-
-                    editDeadline.setText(
-                            new StringBuilder()
-                                    .append(todoDay).append("-")
-                                    .append(todoMonth + 1).append("-")
-                                    .append(todoYear).append(" "));
-                }
-
-            };
+//    private DatePickerDialog.OnDateSetListener Date =
+//            new DatePickerDialog.OnDateSetListener() {
+//                public void onDateSet(DatePicker view, int year,
+//                                      int monthOfYear, int dayOfMonth) {
+//                    todoYear = year;
+//                    todoMonth = monthOfYear;
+//                    todoDay = dayOfMonth;
+//                    updateDisplay();
+//                    Log.v(String.valueOf(Date), "==========================================================================================================================================================================================");
+//
+//                }
+//
+//                private void updateDisplay() {
+//
+//                    editDeadline.setText(
+//                            new StringBuilder()
+//                                    .append(todoDay).append("-")
+//                                    .append(todoMonth + 1).append("-")
+//                                    .append(todoYear).append(" "));
+//                }
+//
+//            };
 
     private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
