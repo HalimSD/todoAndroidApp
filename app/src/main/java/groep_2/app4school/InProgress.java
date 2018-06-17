@@ -28,6 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import groep_2.app4school.utils.SharedPrefManager;
+import groep_2.app4school.utils.Util;
+
 import static groep_2.app4school.MainActivity.todo_deadline;
 import static groep_2.app4school.MainActivity.todo_description;
 import static groep_2.app4school.MainActivity.todo_id;
@@ -38,10 +41,13 @@ public class InProgress extends Fragment{
 
     List<todo> todolist;
     ListView listViewInProgress;
+    String mEmail;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         todolist = new ArrayList<>();
+        mEmail = new SharedPrefManager(getContext()).getUserEmail();
+
 
         View view =  inflater.inflate(R.layout.in_progress, container, false);
         listViewInProgress =view.findViewById(R.id.listViewInProgress);
@@ -53,7 +59,7 @@ public class InProgress extends Fragment{
         super.onStart();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.child("todos").orderByChild("todoStatus").equalTo("In Progress");
+        Query query = reference.child("todos").child(Util.encodeEmail(mEmail)).orderByChild("todoStatus").equalTo("In Progress");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,12 +141,14 @@ public class InProgress extends Fragment{
             @Override
             public void onClick(View v) {
                 deleteTodo(todoID);
+                alertDialog.dismiss();
+
             }
         });
 
     }
     private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
 
@@ -148,7 +156,7 @@ public class InProgress extends Fragment{
     }
 
     private void deleteTodo(String id) {
-        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
 
     }

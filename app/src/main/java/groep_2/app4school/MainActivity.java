@@ -20,17 +20,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,25 +48,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import groep_2.app4school.database.DataSource;
-import groep_2.app4school.model.todoItem;
-import groep_2.app4school.sample.SampleDataProvider;
+import groep_2.app4school.utils.Constant;
+import groep_2.app4school.utils.SharedPrefManager;
+import groep_2.app4school.utils.Util;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
     private DrawerLayout drawer;
     //    TextView tvOut;
-    List<todoItem> todoItemList = SampleDataProvider.dataItemList;
+//    List<todoItem> todoItemList = SampleDataProvider.dataItemList;
     //    List<String> todoTitles = new ArrayList<>();
     DataSource mDataSource;
     public Button mButton;
     public FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     public Button accbtn;
     DatabaseReference databaseTodo;
     ListView listViewTodo;
@@ -73,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String todo_deadline = "todo_deadline";
     public static final String todo_priority = "todo_priority";
 
-
+    GoogleApiClient mGoogleApiClient;
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -83,22 +95,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
 
+    SharedPrefManager sharedPrefManager;
+    Context mContext = this;
+    private String mEmail, mName;
+    private TextView userEmail, userName;
+    private CircleImageView userIMG;
+//    private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
+//        View header = navigationView.getHeaderView(0);
 
         setContentView(R.layout.activity_main);
-        mDataSource = new DataSource(this);
-        mDataSource.open();
-        mDataSource.insertDatabase(todoItemList);
+//        mDataSource = new DataSource(this);
+//        mDataSource.open();
+//        mDataSource.insertDatabase(todoItemList);
         listViewTodo = findViewById(R.id.listViewTodo);
         todolist = new ArrayList<>();
+        Intent intent = getIntent();
+        String idd = intent.getStringExtra(Constant.FIREBASE_LOCATION_USERS);
+        sharedPrefManager = new SharedPrefManager(mContext);
+        mEmail = sharedPrefManager.getUserEmail();
+        mName = sharedPrefManager.getName();
+        userName = findViewById(R.id.header_name);
 
-        databaseTodo = FirebaseDatabase.getInstance().getReference("todos");
-        Query query = databaseTodo.orderByChild("todoPriority").equalTo("High");
+//        if (userName == null){
+//            mName = "";
+//        } else{
+//            userName.setText(mName);
+//
+//        }
+
+//        userName.setText(mName);
+
+//        if (Util.encodeEmail(mEmail) != null){
+//
+//        } else {
+//            databaseTodo = FirebaseDatabase.getInstance().getReference("todos");
+//
+//        }
+        if (mEmail == null) {
+            Intent intentt = new Intent(this, Account.class);
+            startActivity(intentt);
+
+        } else {
+            databaseTodo = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail));
+            Query query = databaseTodo.orderByChild("todoPriority").equalTo("High");
+        }
+
 //        query.addListenerForSingleValueEvent(databaseTodo.valu);
 
         Toast.makeText(this, "Database acquired", Toast.LENGTH_SHORT).show();
@@ -127,6 +175,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View nameView = navigationView.getHeaderView(0);
+        TextView useName = nameView.findViewById(R.id.header_name);
+        useName.setText(mName);
+        View emailView = navigationView.getHeaderView(0);
+        TextView useEmail = emailView.findViewById(R.id.header_email);
+        useEmail.setText(mEmail);
+        View imageView = navigationView.getHeaderView(0);
+        String uri = sharedPrefManager.getPhoto();
+        ImageView profileIMG = imageView.findViewById(R.id.header_img);
+        Picasso.with(mContext).load(uri).into(profileIMG);
+        Picasso.with(mContext).load(uri).fit().centerCrop()
+                .placeholder(android.R.drawable.sym_def_app_icon)
+                .error(android.R.drawable.sym_def_app_icon);
+//                .into(userIMG);
+
+//        Log.v(uri), "==========================================================================================================================================================================================");
+
+//        Uri mPhotoUri = Uri.parse(uri);
+//        Picasso.with(this)
+//                .load(mPhotoUri)
+//                .placeholder(android.R.drawable.sym_def_app_icon)
+//                .error(android.R.drawable.sym_def_app_icon)
+//                .into(userIMG);
+
+//        userEmail = navigationView.findViewById(R.id.header_email);
+        Log.v(String.valueOf(navigationView), "==========================================================================================================================================================================================");
+
+//        userEmail.setText(mEmail);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(MainActivity.this.getResources().getString(R.string.web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(MainActivity.this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(MainActivity.this, "Auth went wrong.", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        mGoogleApiClient.connect();
+
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
@@ -177,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
     private void updateDialog(final String todoID, String todoTitle) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -208,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     editTitle.setError("Title required!");
                     return;
                 }
-                updatebtnhandler(todoID, title,description,deadline, priority, status);
+                updatebtnhandler(todoID, title, description, deadline, priority, status);
                 alertDialog.dismiss();
             }
         });
@@ -224,8 +316,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private boolean updatebtnhandler(String id, String title,String description, String deadline, String priority,  String status) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
+    private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
         Toast.makeText(this, "Todo updated", Toast.LENGTH_SHORT).show();
@@ -233,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void deleteTodo(String id) {
-        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
         Toast.makeText(this, "The todo is deleted!", Toast.LENGTH_SHORT).show();
 
@@ -245,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
+
     public void openAdd() {
         Intent intent = new Intent(this, addTodo.class);
         startActivity(intent);
@@ -254,30 +347,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
+        if (currentUser == null) {
             sendToLogin();
-        }
- else {
-            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
-        }
-
-        databaseTodo.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                todolist.clear();
-                for (DataSnapshot todoSnapshot : dataSnapshot.getChildren()) {
-                    todo todo = todoSnapshot.getValue(todo.class);
-                    todolist.add(todo);
+        } else {
+//            Toast.makeText(this, "you are signed in", Toast.LENGTH_SHORT).show();
+//
+            databaseTodo.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    todolist.clear();
+                    for (DataSnapshot todoSnapshot : dataSnapshot.getChildren()) {
+                        todo todo = todoSnapshot.getValue(todo.class);
+                        todolist.add(todo);
+                    }
+                    todoList adapter = new todoList(MainActivity.this, todolist);
+                    listViewTodo.setAdapter(adapter);
                 }
-                todoList adapter = new todoList(MainActivity.this, todolist);
-                listViewTodo.setAdapter(adapter);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+
     }
 
 
@@ -290,13 +383,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPause() {
         super.onPause();
-        mDataSource.close();
+//        mDataSource.close();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mDataSource.open();
+//        mDataSource.open();
     }
 
     @Override
@@ -354,6 +447,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_home:
                 home();
                 break;
+            case R.id.nav_account:
+                accountt();
+                break;
 //            case R.id.nav_InProgress:
 //                progress();
 //                break;
@@ -383,6 +479,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent home = new Intent(this, MainActivity.class);
         startActivity(home);
         finish();
+    }
+
+    public void accountt() {
+        new SharedPrefManager(mContext).clear();
+        mAuth.signOut();
+
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        Intent intent = new Intent(getApplicationContext(), Account.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+//        Intent home = new Intent(this, Account.class);
+//        startActivity(home);
+//        finish();
     }
 //    public void progress() {
 //        Intent progress = new Intent(this, InProgress.class);

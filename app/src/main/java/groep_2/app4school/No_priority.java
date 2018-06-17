@@ -27,14 +27,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import groep_2.app4school.utils.SharedPrefManager;
+import groep_2.app4school.utils.Util;
+
 public class No_priority extends Fragment{
 
     List<todo> todolist;
     ListView listViewNoPriority;
+    String mEmail;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         todolist = new ArrayList<>();
+        mEmail = new SharedPrefManager(getContext()).getUserEmail();
 
         View view =  inflater.inflate(R.layout.no_priority, container, false);
         listViewNoPriority =view.findViewById(R.id.listViewNoPriority);
@@ -46,7 +51,7 @@ public class No_priority extends Fragment{
         super.onStart();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.child("todos").orderByChild("todoPriority").equalTo("Neutral");
+        Query query = reference.child("todos").child(Util.encodeEmail(mEmail)).orderByChild("todoPriority").equalTo("Neutral");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -115,12 +120,13 @@ public class No_priority extends Fragment{
             @Override
             public void onClick(View v) {
                 deleteTodo(todoID);
+                alertDialog.dismiss();
             }
         });
 
     }
     private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
 
@@ -128,7 +134,7 @@ public class No_priority extends Fragment{
     }
 
     private void deleteTodo(String id) {
-        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
 
     }

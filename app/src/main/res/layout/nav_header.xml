@@ -9,21 +9,30 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/header_img"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:src="@android:drawable/sym_def_app_icon"
+        android:layout_marginTop="10dp"/>
+
+    <!--<ImageView-->
+        <!--android:id="@+id/header_img"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@mipmap/ic_launcher_round" />-->
 
     <TextView
+        android:id="@+id/header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="User Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
+        android:id="@+id/header_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email@gmail.com" />
+        />
 
 </LinearLayout>

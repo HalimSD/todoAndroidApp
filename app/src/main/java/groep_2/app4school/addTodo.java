@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import groep_2.app4school.model.User;
+import groep_2.app4school.utils.Constant;
+import groep_2.app4school.utils.SharedPrefManager;
+import groep_2.app4school.utils.Util;
+
 public class addTodo extends Activity {
 
     Spinner todoPriority;
@@ -48,6 +55,11 @@ public class addTodo extends Activity {
     private int todoDay;
     private Button todoDatePiker;
     static final int DATE_DIALOG_ID = 0;
+    private String mUsername, mEmail;
+
+    SharedPrefManager sharedPrefManager;
+//    Context mContext = this;
+
 
 
     @Override
@@ -69,6 +81,8 @@ public class addTodo extends Activity {
         day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
         month= mCurrentDate.get(Calendar.MONTH);
         year = mCurrentDate.get(Calendar.YEAR);
+        mUsername =  new SharedPrefManager(this).getName();
+        mEmail =  new SharedPrefManager(this).getUserEmail();
 
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +106,7 @@ public class addTodo extends Activity {
 
     }
 
+
     private void setAddTodo(){
         String title = todoTitle.getText().toString().trim();
         String description = todoDescription.getText().toString().trim();
@@ -99,10 +114,12 @@ public class addTodo extends Activity {
         String priority = todoPriority.getSelectedItem().toString();
         String status = todoStatus.getSelectedItem().toString();
 
+
         if (!TextUtils.isEmpty(title)){
+
            String id = databaseTodo.push().getKey();
            todo todo = new todo (id, title, description, deadline, priority, status);
-           databaseTodo.child(id).setValue(todo);
+           databaseTodo.child(Util.encodeEmail(mEmail)).child(id).setValue(todo);
 
            Toast.makeText(this, "A todo has been add", Toast.LENGTH_SHORT).show();
 

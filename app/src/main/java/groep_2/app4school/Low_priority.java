@@ -3,9 +3,9 @@ package groep_2.app4school;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,23 +28,30 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import groep_2.app4school.utils.SharedPrefManager;
+import groep_2.app4school.utils.Util;
+
 import static groep_2.app4school.MainActivity.todo_deadline;
 import static groep_2.app4school.MainActivity.todo_description;
 import static groep_2.app4school.MainActivity.todo_id;
 import static groep_2.app4school.MainActivity.todo_status;
 import static groep_2.app4school.MainActivity.todo_title;
 
-public class Low_priority extends Fragment{
+public class Low_priority extends Fragment {
 
     List<todo> todolist;
     ListView listViewLowPriority;
+    String mEmail;
+
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         todolist = new ArrayList<>();
+        mEmail = new SharedPrefManager(getContext()).getUserEmail();
 
-        View view =  inflater.inflate(R.layout.low_priority, container, false);
-        listViewLowPriority =view.findViewById(R.id.listViewLowPriority);
+
+        View view = inflater.inflate(R.layout.low_priority, container, false);
+        listViewLowPriority = view.findViewById(R.id.listViewLowPriority);
         return view;
     }
 
@@ -53,7 +60,7 @@ public class Low_priority extends Fragment{
         super.onStart();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.child("todos").orderByChild("todoPriority").equalTo("Low");
+        Query query = reference.child("todos").child(Util.encodeEmail(mEmail)).orderByChild("todoPriority").equalTo("Low");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,7 +102,9 @@ public class Low_priority extends Fragment{
                 return false;
             }
         });
+
     }
+
     private void updateDialog(final String todoID, String todoTitle) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getLayoutInflater();
@@ -126,7 +135,7 @@ public class Low_priority extends Fragment{
                     editTitle.setError("Title required!");
                     return;
                 }
-                updatebtnhandler(todoID, title, description, deadline, priority,  status);
+                updatebtnhandler(todoID, title, description, deadline, priority, status);
                 alertDialog.dismiss();
             }
         });
@@ -135,12 +144,14 @@ public class Low_priority extends Fragment{
             @Override
             public void onClick(View v) {
                 deleteTodo(todoID);
+                alertDialog.dismiss();
             }
         });
 
     }
+
     private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
 
@@ -148,7 +159,7 @@ public class Low_priority extends Fragment{
     }
 
     private void deleteTodo(String id) {
-        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(id);
+        DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
 
     }
