@@ -1,6 +1,8 @@
 package groep_2.app4school;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -51,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -100,8 +104,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String mEmail, mName;
     private TextView userEmail, userName;
     private CircleImageView userIMG;
-//    private NavigationView navigationView;
-
+    //    private NavigationView navigationView;
+    Calendar mCurrentDate;
+    //    int day, month, year;
+    private int todoYear, todoMonth, todoDay;
+    private Button todoDatePiker;
+    static final int DATE_DIALOG_ID = 0;
+    private EditText editDeadline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mEmail = sharedPrefManager.getUserEmail();
         mName = sharedPrefManager.getName();
         userName = findViewById(R.id.header_name);
+
 
 //        if (userName == null){
 //            mName = "";
@@ -200,7 +210,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                .into(userIMG);
 
 //        userEmail = navigationView.findViewById(R.id.header_email);
-        Log.v(String.valueOf(navigationView), "==========================================================================================================================================================================================");
 
 //        userEmail.setText(mEmail);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -251,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todo todoList = todolist.get(position);
-                updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
+                 updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
                 return false;
             }
         });
@@ -270,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
     private void updateDialog(final String todoID, String todoTitle) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -282,6 +292,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Spinner editStatus = dialogView.findViewById(R.id.editStatus);
         final Button updateBtn = dialogView.findViewById(R.id.updateBtn);
         final Button deleteBtn = dialogView.findViewById(R.id.deleteBtn);
+        final Button choose = dialogView.findViewById(R.id.todoDatePiker);
+
+
+
+        final Calendar c = Calendar.getInstance();
+        todoYear = c.get(Calendar.YEAR);
+        todoMonth = c.get(Calendar.MONTH);
+        todoDay = c.get(Calendar.DAY_OF_MONTH);
+        editDeadline.setText(
+                new StringBuilder()
+                        .append(todoDay).append("-")
+                        .append(todoMonth + 1).append("-")
+                        .append(todoYear).append(" "));
+
 
         dialogBuilder.setTitle("Updating a todo " + todoTitle);
         final AlertDialog alertDialog = dialogBuilder.create();
@@ -313,8 +337,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+        choose.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showDialog(DATE_DIALOG_ID);
+            }
+        });
 
     }
+
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(this,
+                        Date,
+                        todoYear, todoMonth, todoDay);
+        }
+        return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener Date =
+            new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    todoYear = year;
+                    todoMonth = monthOfYear;
+                    todoDay = dayOfMonth;
+                    updateDisplay();
+                    Log.v(String.valueOf(Date), "==========================================================================================================================================================================================");
+
+                }
+
+                private void updateDisplay() {
+
+                    editDeadline.setText(
+                            new StringBuilder()
+                                    .append(todoDay).append("-")
+                                    .append(todoMonth + 1).append("-")
+                                    .append(todoYear).append(" "));
+                }
+
+            };
 
     private boolean updatebtnhandler(String id, String title, String description, String deadline, String priority, String status) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
@@ -419,18 +483,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_googleAPI:
                 openCallApiActivity();
                 break;
-//            case R.id.nav_3days:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new days()).commit();
-//                break;
-//            case R.id.nav_week:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new week()).commit();
-//                break;
-//            case R.id.nav_month:
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new month()).commit();
-//                break;
+//
             case R.id.nav_done:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new Done()).commit();

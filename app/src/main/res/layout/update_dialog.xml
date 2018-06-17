@@ -70,7 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="date" />
+        android:inputType="date"
+        android:visibility="invisible"/>
+    <Button
+        android:id="@+id/todoDatePiker"
+        android:text="choose date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/updateBtn"

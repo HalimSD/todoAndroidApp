@@ -96,6 +96,7 @@ public class callApi extends Activity
         mOutputText.setPadding(16, 16, 16, 16);
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
+        mOutputText.setTextColor(-16777216);
         mOutputText.setText(
                 "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
         activityLayout.addView(mOutputText);
@@ -314,7 +315,7 @@ public class callApi extends Activity
                 mOutputText.setText("No results returned.");
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+                mOutputText.setText(TextUtils.join("\n\n", output));
             }
         }
 

@@ -1,40 +1,26 @@
 package groep_2.app4school;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import groep_2.app4school.model.User;
-import groep_2.app4school.utils.Constant;
 import groep_2.app4school.utils.SharedPrefManager;
 import groep_2.app4school.utils.Util;
 
@@ -44,22 +30,19 @@ public class addTodo extends Activity {
     Spinner todoStatus;
     EditText todoTitle, todoDescription, todoDeadline;
     CheckBox todoDone;
-    Button addTodoBtn, todoReminder;
+    Button addTodoBtn;
     ListView listViewTodo;
     List<todo> todolist;
     DatabaseReference databaseTodo;
-    Calendar mCurrentDate;
     int day, month, year;
-    private int todoYear;
-    private int todoMonth;
-    private int todoDay;
+    Calendar mCurrentDate;
+    private int todoYear, todoMonth, todoDay;
     private Button todoDatePiker;
     static final int DATE_DIALOG_ID = 0;
     private String mUsername, mEmail;
 
     SharedPrefManager sharedPrefManager;
 //    Context mContext = this;
-
 
 
     @Override
@@ -75,14 +58,13 @@ public class addTodo extends Activity {
         todoTitle = findViewById(R.id.title);
         todoDescription = findViewById(R.id.description);
         todoDeadline = findViewById(R.id.deadline);
-        todoReminder = findViewById(R.id.reminder);
         addTodoBtn = findViewById(R.id.add);
-        mCurrentDate = Calendar.getInstance();
-        day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
-        month= mCurrentDate.get(Calendar.MONTH);
-        year = mCurrentDate.get(Calendar.YEAR);
-        mUsername =  new SharedPrefManager(this).getName();
-        mEmail =  new SharedPrefManager(this).getUserEmail();
+//        mCurrentDate = Calendar.getInstance();
+//        day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
+//        month = mCurrentDate.get(Calendar.MONTH);
+//        year = mCurrentDate.get(Calendar.YEAR);
+        mUsername = new SharedPrefManager(this).getName();
+        mEmail = new SharedPrefManager(this).getUserEmail();
 
         addTodoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +89,7 @@ public class addTodo extends Activity {
     }
 
 
-    private void setAddTodo(){
+    private void setAddTodo() {
         String title = todoTitle.getText().toString().trim();
         String description = todoDescription.getText().toString().trim();
         String deadline = todoDeadline.getText().toString().trim();
@@ -115,22 +97,19 @@ public class addTodo extends Activity {
         String status = todoStatus.getSelectedItem().toString();
 
 
-        if (!TextUtils.isEmpty(title)){
+        if (!TextUtils.isEmpty(title)) {
 
-           String id = databaseTodo.push().getKey();
-           todo todo = new todo (id, title, description, deadline, priority, status);
-           databaseTodo.child(Util.encodeEmail(mEmail)).child(id).setValue(todo);
+            String id = databaseTodo.push().getKey();
+            todo todo = new todo(id, title, description, deadline, priority, status);
+            databaseTodo.child(Util.encodeEmail(mEmail)).child(id).setValue(todo);
 
-           Toast.makeText(this, "A todo has been add", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "A todo has been add", Toast.LENGTH_SHORT).show();
 
         } else {
 
             Toast.makeText(this, "Enter a todo", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 
 
     private void updateDisplay() {
@@ -140,6 +119,7 @@ public class addTodo extends Activity {
                         .append(todoMonth + 1).append("-")
                         .append(todoYear).append(" "));
     }
+
     private DatePickerDialog.OnDateSetListener Date =
             new DatePickerDialog.OnDateSetListener() {
                 public void onDateSet(DatePicker view, int year,

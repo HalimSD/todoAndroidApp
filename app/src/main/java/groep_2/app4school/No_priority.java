@@ -1,10 +1,14 @@
 package groep_2.app4school;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +34,18 @@ import java.util.List;
 import groep_2.app4school.utils.SharedPrefManager;
 import groep_2.app4school.utils.Util;
 
+import static groep_2.app4school.MainActivity.todo_deadline;
+import static groep_2.app4school.MainActivity.todo_description;
+import static groep_2.app4school.MainActivity.todo_id;
+import static groep_2.app4school.MainActivity.todo_status;
+import static groep_2.app4school.MainActivity.todo_title;
+
 public class No_priority extends Fragment{
 
     List<todo> todolist;
     ListView listViewNoPriority;
     String mEmail;
+    public SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,7 +54,76 @@ public class No_priority extends Fragment{
 
         View view =  inflater.inflate(R.layout.no_priority, container, false);
         listViewNoPriority =view.findViewById(R.id.listViewNoPriority);
+        swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh, R.color.refresh1, R.color.refresh2);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                Refresh();
+            }
+        });
         return view;
+    }
+
+    public void Refresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        (new Handler()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+                todolist = new ArrayList<>();
+
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+                Query query = reference.child("todos").child(Util.encodeEmail(mEmail)).orderByChild("todoPriority").equalTo("Neutral");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                                Log.v(issue.toString(), "data");
+                                todo todo = issue.getValue(todo.class);
+                                todolist.add(todo);
+                            }
+                            todoList adapter = new todoList(getActivity(), todolist);
+                            listViewNoPriority.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                listViewNoPriority.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        todo todo = todolist.get(position);
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra(todo_id, todo.getTodoID());
+                        intent.putExtra(todo_title, todo.getTodoTitle());
+                        intent.putExtra(todo_description, todo.getTodoDescription());
+                        intent.putExtra(todo_deadline, todo.getTodoDeadline());
+                        intent.putExtra(todo_status, todo.getTodoStatus());
+                        startActivity(intent);
+                    }
+                });
+                listViewNoPriority.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(todolist.isEmpty()){
+                            getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
+                        }
+                        todo todoList = todolist.get(position);
+                        updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
+                        return false;
+                    }
+                });
+            }
+        }, 1000);
     }
 
     public void onStart() {
@@ -65,6 +145,7 @@ public class No_priority extends Fragment{
                     todoList adapter = new todoList(getActivity(), todolist);
                     listViewNoPriority.setAdapter(adapter);
                 }
+
             }
 
             @Override
@@ -77,6 +158,7 @@ public class No_priority extends Fragment{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 todo todoList = todolist.get(position);
                 updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
                 return false;
             }
         });
@@ -113,6 +195,8 @@ public class No_priority extends Fragment{
                 }
                 updatebtnhandler(todoID, title, description, deadline, priority,  status);
                 alertDialog.dismiss();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
+
             }
         });
 
@@ -121,6 +205,8 @@ public class No_priority extends Fragment{
             public void onClick(View v) {
                 deleteTodo(todoID);
                 alertDialog.dismiss();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
+
             }
         });
 
@@ -129,6 +215,7 @@ public class No_priority extends Fragment{
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
 
         return true;
     }
@@ -136,6 +223,8 @@ public class No_priority extends Fragment{
     private void deleteTodo(String id) {
         DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, new No_priority()).commit();
 
     }
+
 }

@@ -3,9 +3,11 @@ package groep_2.app4school;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +44,8 @@ public class InProgress extends Fragment{
     List<todo> todolist;
     ListView listViewInProgress;
     String mEmail;
+    public SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,9 +55,79 @@ public class InProgress extends Fragment{
 
         View view =  inflater.inflate(R.layout.in_progress, container, false);
         listViewInProgress =view.findViewById(R.id.listViewInProgress);
+        swipeRefreshLayout = view.findViewById(R.id.swipelayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.refresh, R.color.refresh1, R.color.refresh2);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                Refresh();
+            }
+        });
         return view;
     }
 
+
+    public void Refresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        (new Handler()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+                todolist = new ArrayList<>();
+
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+                Query query = reference.child("todos").child(Util.encodeEmail(mEmail)).orderByChild("todoPriority").equalTo("In Progress");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                                Log.v(issue.toString(), "data");
+                                todo todo = issue.getValue(todo.class);
+                                todolist.add(todo);
+                            }
+                            todoList adapter = new todoList(getActivity(), todolist);
+                            listViewInProgress.setAdapter(adapter);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                listViewInProgress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        todo todo = todolist.get(position);
+                        Intent intent = new Intent(getContext(), DetailActivity.class);
+                        intent.putExtra(todo_id, todo.getTodoID());
+                        intent.putExtra(todo_title, todo.getTodoTitle());
+                        intent.putExtra(todo_description, todo.getTodoDescription());
+                        intent.putExtra(todo_deadline, todo.getTodoDeadline());
+                        intent.putExtra(todo_status, todo.getTodoStatus());
+                        startActivity(intent);
+                    }
+                });
+                listViewInProgress.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position != 0){
+                            todo todoList = todolist.get(position);
+                            updateDialog(todoList.getTodoID(), todoList.getTodoTitle());
+                        }
+                        return false;
+                    }
+                });
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, new InProgress()).commit();
+
+            }
+        }, 1000);
+    }
     public void onStart() {
 
         super.onStart();
@@ -151,13 +225,13 @@ public class InProgress extends Fragment{
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         todo todo = new todo(id, title, description, deadline, priority, status);
         databaseReference.setValue(todo);
-
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, new InProgress()).commit();
         return true;
     }
 
     private void deleteTodo(String id) {
         DatabaseReference dfDelete = FirebaseDatabase.getInstance().getReference("todos").child(Util.encodeEmail(mEmail)).child(id);
         dfDelete.removeValue();
-
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, new InProgress()).commit();
     }
 }
